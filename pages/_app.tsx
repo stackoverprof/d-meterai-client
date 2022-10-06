@@ -6,6 +6,7 @@ import { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
 import '@core/styles/global.tailwind.css';
 import '@core/styles/typefaces.css';
+import { Web3ContextProvider } from '@core/lib/ethers-react';
 
 const App = ({ Component, pageProps }: AppProps) => {
 	return (
@@ -15,9 +16,11 @@ const App = ({ Component, pageProps }: AppProps) => {
 				<meta name="theme-color" content="#000000" />
 			</Head>
 			<ProgressBar color="#009AFF" />
-			<Provider store={store}>
-				<Component {...pageProps} />
-			</Provider>
+			<Web3ContextProvider>
+				<Provider store={store}>
+					<Component {...pageProps} />
+				</Provider>
+			</Web3ContextProvider>
 		</>
 	);
 };

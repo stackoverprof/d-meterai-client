@@ -1,6 +1,7 @@
 import React from 'react';
 import SEOTags from '@components/_shared/SEOTags';
 import useMinHeight from '@core/hooks/useMinHeight';
+import NavigationBar from '@components/NavigationBar';
 
 interface Props {
 	children: React.ReactNode;
@@ -16,7 +17,9 @@ const MainLayout = ({ children, title, className, style }: Props) => {
 		<>
 			<SEOTags title={title} />
 
-			<header ref={upperRef}>{/* Navbar things */}</header>
+			<header ref={upperRef}>
+				<NavigationBar />
+			</header>
 
 			<main style={{ minHeight, ...style }} className={className}>
 				{children}
