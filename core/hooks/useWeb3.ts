@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { useMetaMask } from './useMetaMask';
+import useMetaMask from './useMetaMask';
 
-export const useWeb3 = () => {
+const useWeb3 = () => {
 	const { account } = useMetaMask();
 	const [balance, setBalance] = useState<string | number>(0);
 	const [provider, setProvider] = useState<any>(null);
@@ -32,4 +32,6 @@ export const useWeb3 = () => {
 		web3Provider: provider,
 	};
 };
+
+export default useWeb3;
 

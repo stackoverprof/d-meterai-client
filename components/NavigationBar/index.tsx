@@ -1,9 +1,9 @@
-import { Web3ProviderContext, useMetaMask } from '@core/lib/ethers-react';
-
+import useMetaMask from '@core/hooks/useMetaMask';
+import useWeb3 from '@core/hooks/useWeb3';
 import React, { useContext, useEffect } from 'react';
 
 const NavigationBar = () => {
-	const { balance } = useContext(Web3ProviderContext);
+	const { balance } = useWeb3();
 	const { isLoading, account, connectWallet } = useMetaMask();
 
 	return (

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export const useMetaMask = () => {
+const useMetaMask = () => {
 	// is installed wallet
 	const [isInstalledWallet, setIsInstalledWallet] = useState<boolean>(false);
 	// is connected wallet
@@ -109,4 +109,6 @@ export const useMetaMask = () => {
 		connectWallet,
 	};
 };
+
+export default useMetaMask;
 

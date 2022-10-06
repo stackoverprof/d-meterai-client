@@ -2,8 +2,10 @@ import React from 'react';
 import Link from '@components/_shared/Link';
 import MainLayout from '@components/_layouts/MainLayout';
 import { NextPage } from 'next';
+import useWeb3 from '@core/hooks/useWeb3';
 
 const Index: NextPage = () => {
+	const { balance } = useWeb3();
 	return (
 		<MainLayout title="Home" className="flex-sc col">
 			<h1 className="z-10 mt-48 mb-4 text-4xl font-bold text-center">Next (Basic) Starter</h1>
@@ -37,7 +39,7 @@ const Index: NextPage = () => {
 						target="_blank"
 						className="font-bold underline"
 					>
-						repository
+						{balance}
 					</Link>
 				</p>
 			</div>
