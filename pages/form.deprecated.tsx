@@ -3,17 +3,14 @@ import Link from '@components/_shared/Link';
 import MainLayout from '@components/_layouts/MainLayout';
 import useForm from '@core/hooks/useForm';
 import { NextPage } from 'next';
-import useWeb3 from '@core/hooks/useWeb3';
-import { Contract, ethers } from 'ethers';
-import DigitalMeteraiABI from '@abi/DigitalMeterai.json';
+import useDigitalMeterai from '@core/hooks/useDigitalMeterai';
+import { ethers } from 'ethers';
 
 interface FormType {
 	nickname: string;
 	city: string;
 	story: string;
 }
-
-const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 
 const Form: NextPage = () => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -24,18 +21,12 @@ const Form: NextPage = () => {
 		story: '',
 	});
 
-	const { provider } = useWeb3();
+	const DigitalMeterai = useDigitalMeterai();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const signer = provider.getSigner();
-		const DigitalMeterai: Contract = new ethers.Contract(
-			CONTRACT_ADDRESS,
-			DigitalMeteraiABI,
-			signer
-		);
-		console.log('ERCCCC', DigitalMeterai);
-		const txResponse = await DigitalMeterai.owner(); //mint(75, ethers.utils.parseEther('0.0005'));
+
+		const txResponse = await DigitalMeterai.mint(75, ethers.utils.parseEther('0.0005'));
 		console.log('txResponse', txResponse);
 	};
 
