@@ -3,6 +3,7 @@
 		"target": "es5",
 		"baseUrl": ".",
 		"paths": {
+			"@abi/*": ["abi/*"],
 			"@components/*": ["components/*"],
 			"@core/*": ["core/*"],
 			"@pages/*": ["pages/*"]

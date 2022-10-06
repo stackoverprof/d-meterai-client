@@ -1,6 +1,6 @@
 import useMetaMask from '@core/hooks/useMetaMask';
 import useWeb3 from '@core/hooks/useWeb3';
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 
 const NavigationBar = () => {
 	const { balance } = useWeb3();

@@ -29,7 +29,7 @@ const useWeb3 = () => {
 
 	return {
 		balance,
-		web3Provider: provider,
+		provider,
 	};
 };
 
