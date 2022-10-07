@@ -1,12 +1,10 @@
-import useMetaMask from '@core/hooks/useMetaMask';
-import useWeb3 from '@core/hooks/useWeb3';
+import useWallet from '@core/hooks/useWallet';
 import React from 'react';
 import { HiCheckCircle } from 'react-icons/hi';
 import { MdAccountBalanceWallet } from 'react-icons/md';
 
 const ConnectionPortal = () => {
-	const { balance } = useWeb3();
-	const { isLoading, account, connectWallet } = useMetaMask();
+	const { isLoading, account, connectWallet, balance } = useWallet();
 
 	if (!account)
 		return (

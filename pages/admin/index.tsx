@@ -8,13 +8,12 @@ import useTokenSupply from '@core/hooks/useTokenSupply';
 const Admin: NextPage = () => {
 	useContractOwnerOnly();
 
-	const { total, available } = useTokenSupply();
+	const { available } = useTokenSupply();
 
 	return (
 		<AdminLayout title="Home" className="flex-sc col">
 			<div className="my-8">
-				<p className="">{total}</p>
-				<p className="">{available}</p>
+				<p className="text-xl">Stok d-Meterai tersedia: {available}</p>
 			</div>
 			<MintFeature />
 		</AdminLayout>
@@ -22,3 +21,5 @@ const Admin: NextPage = () => {
 };
 
 export default Admin;
+
+// [TODO] : Transfer contract ownership

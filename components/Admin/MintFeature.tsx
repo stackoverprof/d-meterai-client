@@ -20,11 +20,12 @@ const MintFeature = () => {
 
 	const handleSubmit = async () => {
 		setIsLoading(true);
-		const txResponse = await DigitalMeterai.mint(
-			form.quantity,
-			ethers.utils.parseEther(form.price.toString())
-		).catch(() => alert('Proses penerbitan gagal'));
-		console.log('txResponse', txResponse.toString());
+		DigitalMeterai.mint(form.quantity, ethers.utils.parseEther(form.price.toString())).catch(
+			() => {
+				alert('Proses penerbitan gagal');
+				setIsLoading(false);
+			}
+		);
 	};
 
 	useEffect(() => {

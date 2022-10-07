@@ -2,11 +2,11 @@ import compareAddresses from '@core/utils/compareAddresses';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import useDigitalMeterai from './useDigitalMeterai';
-import useMetaMask from './useMetaMask';
+import useWallet from './useWallet';
 
 const useContractOwnerOnly = () => {
 	const DigitalMeterai = useDigitalMeterai();
-	const { account } = useMetaMask();
+	const { account } = useWallet();
 	const router = useRouter();
 
 	useEffect(() => {

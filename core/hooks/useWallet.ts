@@ -1,12 +1,17 @@
+import { ethers } from 'ethers';
 import { useState, useEffect } from 'react';
+import useWeb3 from './useWeb3';
 
-const useMetaMask = () => {
+const useWallet = () => {
 	// is installed wallet
 	const [isInstalledWallet, setIsInstalledWallet] = useState<boolean>(false);
 	// is connected wallet
 	const [isConnected, setIsConnected] = useState<boolean>(false);
 	// connected accounts
 	const [account, setaccount] = useState<string | null>(null);
+	// balance
+	const [balance, setBalance] = useState<string | number>(0);
+
 	// is connect process still running
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -89,6 +94,30 @@ const useMetaMask = () => {
 			});
 	};
 
+	// get balance
+	const getBalance = async () => {
+		const balance = await provider.getBalance(account);
+		setBalance(ethers.utils.formatEther(balance));
+	};
+
+	const { provider } = useWeb3();
+
+	useEffect(() => {
+		account && getBalance();
+	}, [account, provider]);
+
+	useEffect(() => {
+		if (typeof provider !== 'undefined' && account) {
+			(async () => {
+				await provider.on('block', () => {
+					provider.getBalance(account).then((value) => {
+						setBalance(ethers.utils.formatEther(value));
+					});
+				});
+			})();
+		}
+	}, [provider, account]);
+
 	useEffect(() => {
 		checkIfWalletIsInstalled();
 	}, []);
@@ -104,11 +133,12 @@ const useMetaMask = () => {
 		isConnected,
 		isLoading,
 		account,
+		balance,
 		checkIfWalletIsInstalled,
 		checkIfWalletIsConnected,
 		connectWallet,
 	};
 };
 
-export default useMetaMask;
+export default useWallet;
 

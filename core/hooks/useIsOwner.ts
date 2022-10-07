@@ -1,13 +1,13 @@
 import compareAddresses from '@core/utils/compareAddresses';
 import { useEffect, useState } from 'react';
 import useDigitalMeterai from './useDigitalMeterai';
-import useMetaMask from './useMetaMask';
+import useWallet from './useWallet';
 
 const useIsOwner = () => {
 	const [isOwner, setIsOwner] = useState(false);
 
 	const DigitalMeterai = useDigitalMeterai();
-	const { account } = useMetaMask();
+	const { account } = useWallet();
 
 	useEffect(() => {
 		(async () => {
