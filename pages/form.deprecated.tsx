@@ -27,7 +27,7 @@ const Form: NextPage = () => {
 		e.preventDefault();
 
 		const txResponse = await DigitalMeterai.mint(75, ethers.utils.parseEther('0.0005'));
-		console.log('txResponse', txResponse);
+		console.log('txResponse', txResponse.toString());
 	};
 
 	return (
