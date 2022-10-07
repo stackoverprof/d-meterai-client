@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import MainLayout from '@components/_layouts/MainLayout';
+
 import { NextPage } from 'next';
 import useContractOwnerOnly from '@core/hooks/useContractOwnerOnly';
 import useDigitalMeterai from '@core/hooks/useDigitalMeterai';
+import AdminLayout from '@components/_layouts/AdminLayout';
 
 const Admin: NextPage = () => {
 	useContractOwnerOnly();
@@ -22,7 +23,7 @@ const Admin: NextPage = () => {
 	useEffect(() => {
 		if (DigitalMeterai) {
 			// listen to mint event on DigitalMeterai
-			DigitalMeterai.on('DMT___Minted', (minter, quantity, price) => {
+			DigitalMeterai.on('DMT___Minted', (tokenIds) => {
 				DigitalMeterai.getTotalSupply().then((res) => {
 					setTotalSupply(parseInt(res.toString()));
 				});
@@ -31,10 +32,10 @@ const Admin: NextPage = () => {
 	}, [DigitalMeterai]);
 
 	return (
-		<MainLayout title="Home" className="flex-sc col">
+		<AdminLayout title="Home" className="flex-sc col">
 			<h1 className="mb-4 text-4xl font-bold">Admin</h1>
 			<h1 className="mb-4 text-4xl font-bold">{totalSupply}</h1>
-		</MainLayout>
+		</AdminLayout>
 	);
 };
 

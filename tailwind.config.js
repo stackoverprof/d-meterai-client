@@ -9,14 +9,15 @@ module.exports = {
 		},
 		extend: {
 			colors: {
-				base: '#ffffff',
-				primary: '#3b3b3b',
+				base: '#160542',
+				primary: '#FFFFFF',
 				theme: {
 					orange: '#FF5B14',
 					blue: '#2DA7FB',
 					yellow: '#FFCB11',
 					red: '#ec4141',
 					green: '#67db8e',
+					purple: '#BD77ED',
 				},
 			},
 			fontFamily: {

@@ -1,7 +1,7 @@
 import React from 'react';
 import SEOTags from '@components/_shared/SEOTags';
 import useMinHeight from '@core/hooks/useMinHeight';
-import NavbarMain from '@components/NavigationBar/NavbarMain';
+import NavbarAdmin from '@components/NavigationBar/NavbarAdmin';
 
 interface Props {
 	children: React.ReactNode;
@@ -10,7 +10,7 @@ interface Props {
 	style?: React.CSSProperties;
 }
 
-const MainLayout = ({ children, title, className, style }: Props) => {
+const AdminLayout = ({ children, title, className, style }: Props) => {
 	const [minHeight, upperRef, lowerRef] = useMinHeight();
 
 	return (
@@ -18,7 +18,7 @@ const MainLayout = ({ children, title, className, style }: Props) => {
 			<SEOTags title={title} />
 
 			<header ref={upperRef}>
-				<NavbarMain />
+				<NavbarAdmin />
 			</header>
 
 			<main style={{ minHeight, ...style }} className={className}>
@@ -30,4 +30,4 @@ const MainLayout = ({ children, title, className, style }: Props) => {
 	);
 };
 
-export default MainLayout;
+export default AdminLayout;

@@ -18,7 +18,7 @@ const Index: NextPage = () => {
 
 	return (
 		<MainLayout title="Home" className="flex-sc col">
-			<h1 className="mb-4 text-4xl font-bold">Home</h1>
+			<h1 className="mb-4 text-4xl font-bold"></h1>
 		</MainLayout>
 	);
 };
