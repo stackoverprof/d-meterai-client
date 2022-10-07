@@ -11,7 +11,7 @@ const NavbarAdmin = () => {
 				<div className="flex-cc gap-4">
 					<div className="flex-cc gap-2 pt-1">
 						<RiShieldFlashLine className="w-10 h-10" />
-						<p className="text-2xl">Admin Portal</p>
+						<p className="text-2xl">Dasbor Admin</p>
 						<p className="text-2xl font-bold text-theme-purple">d-Meterai </p>
 					</div>
 				</div>
