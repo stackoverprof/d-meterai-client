@@ -1,6 +1,8 @@
 import React from 'react';
 import ConnectionPortal from './ConnectionPortal';
 import { RiShieldFlashLine } from 'react-icons/ri';
+import { MdOutlineHome } from 'react-icons/md';
+import Link from '@components/_shared/Link';
 
 const NavbarAdmin = () => {
 	return (
@@ -13,7 +15,15 @@ const NavbarAdmin = () => {
 						<p className="text-2xl font-bold text-theme-purple">d-Meterai </p>
 					</div>
 				</div>
-				<ConnectionPortal />
+				<div className="flex-cc gap-2">
+					<ConnectionPortal />
+					<Link
+						href="/"
+						className="flex-cc w-11 h-11 bg-white bg-opacity-0 rounded hover:bg-opacity-40 "
+					>
+						<MdOutlineHome className="w-8 h-8" />
+					</Link>
+				</div>
 			</div>
 		</div>
 	);
