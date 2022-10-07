@@ -1,30 +1,19 @@
-import Logo from '@components/_shared/Logo';
-import useMetaMask from '@core/hooks/useMetaMask';
-import useWeb3 from '@core/hooks/useWeb3';
 import React from 'react';
+import ConnectionPortal from './ConnectionPortal';
+import { RiShieldFlashLine } from 'react-icons/ri';
 
 const NavbarAdmin = () => {
-	const { balance } = useWeb3();
-	const { isLoading, account, connectWallet } = useMetaMask();
-
 	return (
 		<div className="flex-cc w-full border-b border-theme-purple">
 			<div className="container flex-bc py-3">
-				<Logo />
-				<p className="truncate whitespace-nowrap">
-					{account
-						? `
-					Connected to 
-					${account.slice(0, 8)}...${account.slice(-6)} 
-					balance: ${balance}
-					`
-						: 'Please connect'}
-				</p>
-				{!account && (
-					<button className="" onClick={connectWallet} disabled={isLoading}>
-						{isLoading ? 'Opening MetaMask' : 'Connect'}
-					</button>
-				)}
+				<div className="flex-cc gap-4">
+					<div className="flex-cc gap-2 pt-1">
+						<RiShieldFlashLine className="w-10 h-10" />
+						<p className="text-2xl">Admin Portal</p>
+						<p className="text-2xl font-bold text-theme-purple">d-Meterai </p>
+					</div>
+				</div>
+				<ConnectionPortal />
 			</div>
 		</div>
 	);

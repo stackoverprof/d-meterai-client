@@ -13,7 +13,7 @@ const ConnectionPortal = () => {
 			<div className="flex-cc gap-6">
 				<p className="text-lg opacity-75">Untuk menggunakan aplikasi</p>
 				<button
-					className="px-4 py-2 text-lg font-semibold text-white rounded bg-theme-purple"
+					className="px-4 py-2 h-11 text-lg font-semibold text-white rounded bg-theme-purple"
 					onClick={connectWallet}
 					disabled={isLoading}
 				>
@@ -28,7 +28,7 @@ const ConnectionPortal = () => {
 					<MdAccountBalanceWallet size={24} />
 					<p className="text-lg">{balance.toString().slice(0, 8)} ETH</p>
 				</div>
-				<div className="flex-cc gap-2 px-4 py-2 text-lg font-semibold text-white rounded bg-theme-purple">
+				<div className="flex-cc gap-2 px-4 py-2 h-11 text-lg font-semibold text-white rounded bg-theme-purple">
 					<HiCheckCircle className="mb-[2px] text-white" size={24} />
 					{account.slice(0, 5)}...{account.slice(-4)}
 				</div>
