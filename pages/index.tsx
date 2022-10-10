@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import MainLayout from '@components/_layouts/MainLayout';
 import { NextPage } from 'next';
 import useDigitalMeterai from '@core/hooks/useDigitalMeterai';
+import HeroSection from '@components/Home/HeroSection';
 
 const Index: NextPage = () => {
 	const DigitalMeterai = useDigitalMeterai();
@@ -18,7 +19,7 @@ const Index: NextPage = () => {
 
 	return (
 		<MainLayout title="Home" className="flex-sc col">
-			<h1 className="mb-4 text-4xl font-bold"></h1>
+			<HeroSection />
 		</MainLayout>
 	);
 };
