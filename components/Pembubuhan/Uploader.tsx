@@ -3,6 +3,8 @@ import { Web3Storage } from 'web3.storage';
 import qr from 'qr-image';
 import PDFMerger from 'pdf-merger-js/browser';
 import { useRouter } from 'next/router';
+import CryptoJS from 'crypto-js';
+import axios from 'axios';
 
 const client = new Web3Storage({ token: process.env.NEXT_PUBLIC_WEB3_STORAGE_API_TOKEN });
 
@@ -21,7 +23,7 @@ const Uploader = () => {
 		return blobFile;
 	};
 
-	const attachMeterai = async (document: File) => {
+	const attachToken = async (document: File) => {
 		const qrStamp = generateQR();
 		const merger = new PDFMerger();
 		await merger.add(qrStamp);
@@ -33,10 +35,26 @@ const Uploader = () => {
 		return asFile;
 	};
 
+	const fileToBase64 = async (file: File) => {
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = () => resolve(reader.result);
+			reader.onerror = (error) => reject(error);
+		});
+	};
+
 	const handleUpload = async () => {
 		if (!file || !file.length) return;
-		const processedDocument = await attachMeterai(file[0]);
-		const res = await client.put([processedDocument]);
+		const processedDocument = await attachToken(file[0]);
+
+		const asBase64 = await fileToBase64(processedDocument).then((res) => res);
+		if (typeof asBase64 !== 'string') return;
+		const encryptedBase64 = CryptoJS.AES.encrypt(asBase64, 'password').toString();
+		const asTxtBlob = new Blob([encryptedBase64], { type: 'text/plain' });
+		const asTxtFile = new File([asTxtBlob], `encrypted-${tokenId}`, { type: 'text/plain' });
+
+		const res = await client.put([asTxtFile]);
 		setFolderCID(res);
 	};
 
@@ -47,25 +65,25 @@ const Uploader = () => {
 	};
 
 	const handleDownload = async () => {
-		// Fetch and verify files from web3.storage
-		const res = await client.get(folderCID); // Promise<Web3Response | null>
-		const files = await res.files(); // Promise<Web3File[]>
-		for (const file of files) {
-			console.log(`${file.cid} ${file.name} ${file.size}`);
-		}
+		const res = await client.get(folderCID);
+		const files = await res.files();
+
+		const downloadLink = `https://${files[0].cid}.ipfs.w3s.link`;
+		const encryptedBase64 = await axios.get(downloadLink).then((res) => res.data);
+		const decryptedBase64 = CryptoJS.AES.decrypt(encryptedBase64, 'password').toString(
+			CryptoJS.enc.Utf8
+		);
+		const response = await fetch(decryptedBase64);
+		const asBlob = await response.blob();
+
+		const blobURL = URL.createObjectURL(asBlob);
+		const a = document.createElement('a');
+		a.setAttribute('download', 'decrypted.pdf');
+		a.setAttribute('href', blobURL);
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
 	};
-
-	// console.log('file', file);
-	// const router = useRouter();
-	// const { tokenId } = router.query;
-
-	// const handleQR = async () => {
-	// 	console.log('blob', blob);
-	// 	setFile((prev) => [...prev, blobFile]);
-	// 	document.getElementById('my-img').src = URL.createObjectURL(blob);
-	// };
-
-	// console.log('file', file);
 
 	return (
 		<div className="flex-sc col">
