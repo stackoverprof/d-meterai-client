@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { Web3Storage } from 'web3.storage';
+import React, { useEffect, useState } from 'react';
 import qr from 'qr-image';
 import PDFMerger from 'pdf-merger-js/browser';
 import { useRouter } from 'next/router';
 import CryptoJS from 'crypto-js';
-import axios from 'axios';
+import useDigitalMeterai from '@core/hooks/useDigitalMeterai';
+import useIPFS from '@core/hooks/useIPFS';
 
-const client = new Web3Storage({ token: process.env.NEXT_PUBLIC_WEB3_STORAGE_API_TOKEN });
+type EnumStatus = 'initial' | 'uploading' | 'binding' | 'done' | 'failed';
 
 const Uploader = () => {
-	const [folderCID, setFolderCID] = useState(null);
+	const [status, setStatus] = useState<EnumStatus>('initial');
 	const [file, setFile] = useState<any[]>(null);
 
 	const router = useRouter();
@@ -44,8 +44,11 @@ const Uploader = () => {
 		});
 	};
 
+	const IPFS = useIPFS();
+
 	const handleUpload = async () => {
 		if (!file || !file.length) return;
+		setStatus('uploading');
 		const processedDocument = await attachToken(file[0]);
 
 		const asBase64 = await fileToBase64(processedDocument).then((res) => res);
@@ -54,36 +57,40 @@ const Uploader = () => {
 		const asTxtBlob = new Blob([encryptedBase64], { type: 'text/plain' });
 		const asTxtFile = new File([asTxtBlob], `encrypted-${tokenId}`, { type: 'text/plain' });
 
-		const res = await client.put([asTxtFile]);
-		setFolderCID(res);
+		const folderCID = await IPFS.put([asTxtFile]);
+
+		await IPFS.status(folderCID);
+
+		handleTokenBinding(folderCID);
 	};
 
-	const handleFileChange = (e) => {
+	const handleFileChange = (e: any) => {
 		e.preventDefault();
 		const file = e.target.files;
 		setFile(file);
 	};
 
-	const handleDownload = async () => {
-		const res = await client.get(folderCID);
-		const files = await res.files();
+	const DigitalMeterai = useDigitalMeterai();
 
-		const downloadLink = `https://${files[0].cid}.ipfs.w3s.link`;
-		const encryptedBase64 = await axios.get(downloadLink).then((res) => res.data);
-		const decryptedBase64 = CryptoJS.AES.decrypt(encryptedBase64, 'password').toString(
-			CryptoJS.enc.Utf8
-		);
-		const response = await fetch(decryptedBase64);
-		const asBlob = await response.blob();
-
-		const blobURL = URL.createObjectURL(asBlob);
-		const a = document.createElement('a');
-		a.setAttribute('download', 'decrypted.pdf');
-		a.setAttribute('href', blobURL);
-		document.body.appendChild(a);
-		a.click();
-		document.body.removeChild(a);
+	const handleTokenBinding = async (folderCID: string) => {
+		setStatus('binding');
+		DigitalMeterai.bind(tokenId, folderCID).catch((err) => {
+			console.error('Failed to bind', err);
+			setStatus('failed');
+		});
 	};
+
+	const onSuccess = () => {
+		setStatus('done');
+		router.push(`/pengunduhan?tokenId=${0}`);
+	};
+
+	useEffect(() => {
+		if (DigitalMeterai) {
+			// listen to mint event on DigitalMeterai
+			DigitalMeterai.on('DMT___Bound', onSuccess);
+		}
+	}, [DigitalMeterai]);
 
 	return (
 		<div className="flex-sc col">
@@ -104,22 +111,17 @@ const Uploader = () => {
 				</label>
 			</div>
 			<button
-				className="px-4 h-11 text-xl font-bold rounded bg-theme-purple"
+				className="px-4 h-11 text-xl font-bold rounded bg-theme-purple disabled:bg-opacity-30"
 				onClick={handleUpload}
+				disabled={status !== 'initial'}
 			>
-				Unggah dokumen ke IPFS
-			</button>
-			FileUrl :{' '}
-			<a
-				href={`https://${folderCID}.ipfs.w3s.link`}
-				target="_blank"
-				rel="noopener noreferrer"
-				className="underline"
-			>
-				{folderCID}
-			</a>
-			<button className="" onClick={handleDownload}>
-				download
+				{
+					{
+						initial: 'Unggah dan bubuhkan meterai',
+						uploading: 'Proses penggunggahan...',
+						binding: 'Proses pembubuhan...',
+					}[status]
+				}
 			</button>
 		</div>
 	);
