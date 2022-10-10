@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { Web3Storage } from 'web3.storage';
 import qr from 'qr-image';
+import PDFMerger from 'pdf-merger-js/browser';
 import { useRouter } from 'next/router';
-import axios from 'axios';
 
 const client = new Web3Storage({ token: process.env.NEXT_PUBLIC_WEB3_STORAGE_API_TOKEN });
 
 const Uploader = () => {
 	const [folderCID, setFolderCID] = useState(null);
 	const [file, setFile] = useState<any[]>(null);
-	console.log('file', file);
 
 	const router = useRouter();
 	const { tokenId } = router.query;
@@ -19,15 +18,25 @@ const Uploader = () => {
 		const buffer = qr.imageSync(verificationURL, { type: 'pdf' });
 		const blob = new Blob([buffer], { type: 'application/pdf' });
 		const blobFile = new File([blob], 'qr-stamp.pdf', { type: 'application/pdf' });
-		//convert image blob to pdf file
-
 		return blobFile;
 	};
 
-	const handleUpload = async () => {
+	const attachMeterai = async (document: File) => {
 		const qrStamp = generateQR();
+		const merger = new PDFMerger();
+		await merger.add(qrStamp);
+		await merger.add(document);
+		const asBlob = await merger.saveAsBlob();
+		const asFile = new File([asBlob], `${tokenId}-${document.name}.pdf`, {
+			type: 'application/pdf',
+		});
+		return asFile;
+	};
+
+	const handleUpload = async () => {
 		if (!file || !file.length) return;
-		const res = await client.put([...file, qrStamp]);
+		const processedDocument = await attachMeterai(file[0]);
+		const res = await client.put([processedDocument]);
 		setFolderCID(res);
 	};
 
@@ -61,7 +70,14 @@ const Uploader = () => {
 	return (
 		<div className="flex-sc col">
 			<div className="w-[800px] mb-8 h-48 flex-cc rounded border-2 relative border-theme-purple">
-				<input type="file" id="file" className="opacity-0" onChange={handleFileChange} />
+				<input
+					type="file"
+					accept="application/pdf"
+					name="document"
+					id="file"
+					className="opacity-0"
+					onChange={handleFileChange}
+				/>
 				<label
 					htmlFor="file"
 					className="absolute flex-cc z-50 text-xl bg-white bg-opacity-0 hover:bg-opacity-20 full"
