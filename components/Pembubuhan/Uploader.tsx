@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import CryptoJS from 'crypto-js';
 import useDigitalMeterai from '@core/hooks/useDigitalMeterai';
 import useIPFS from '@core/hooks/useIPFS';
+import { passwordGenerator } from '@core/utils/passwordGenerator';
 
 type EnumStatus = 'initial' | 'uploading' | 'binding' | 'done' | 'failed';
 
@@ -53,7 +54,9 @@ const Uploader = () => {
 
 		const asBase64 = await fileToBase64(processedDocument).then((res) => res);
 		if (typeof asBase64 !== 'string') return;
-		const encryptedBase64 = CryptoJS.AES.encrypt(asBase64, 'password').toString();
+
+		const password = passwordGenerator();
+		const encryptedBase64 = CryptoJS.AES.encrypt(asBase64, password).toString();
 		const asTxtBlob = new Blob([encryptedBase64], { type: 'text/plain' });
 		const asTxtFile = new File([asTxtBlob], `encrypted-${tokenId}`, { type: 'text/plain' });
 
@@ -61,7 +64,7 @@ const Uploader = () => {
 
 		await IPFS.status(folderCID);
 
-		handleTokenBinding(folderCID);
+		handleTokenBinding(folderCID, password);
 	};
 
 	const handleFileChange = (e: any) => {
@@ -72,9 +75,9 @@ const Uploader = () => {
 
 	const DigitalMeterai = useDigitalMeterai();
 
-	const handleTokenBinding = async (folderCID: string) => {
+	const handleTokenBinding = async (folderCID: string, password: string) => {
 		setStatus('binding');
-		DigitalMeterai.bind(tokenId, folderCID).catch((err) => {
+		DigitalMeterai.bind(tokenId, folderCID, password).catch((err) => {
 			console.error('Failed to bind', err);
 			setStatus('failed');
 		});

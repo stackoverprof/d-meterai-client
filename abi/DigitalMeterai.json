@@ -26,6 +26,11 @@
   },
   {
     "inputs": [],
+    "name": "DMT___UnmatchedStatusNotBound",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "DMT___UnmatchedStatusNotPaid",
     "type": "error"
   },
@@ -77,6 +82,18 @@
       }
     ],
     "name": "ApprovalForAll",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [],
+    "name": "DMT___AccessControlAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [],
+    "name": "DMT___AccessControlRemoved",
     "type": "event"
   },
   {
@@ -158,6 +175,24 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "addAccessControl",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "to",
         "type": "address"
@@ -203,6 +238,11 @@
         "internalType": "string",
         "name": "_document",
         "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_password",
+        "type": "string"
       }
     ],
     "name": "bind",
@@ -214,7 +254,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "_tokenId",
         "type": "uint256"
       }
     ],
@@ -330,6 +370,25 @@
         "type": "uint256"
       }
     ],
+    "name": "getPassword",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      }
+    ],
     "name": "getToken",
     "outputs": [
       {
@@ -428,12 +487,12 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "quantity",
+        "name": "_quantity",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "price",
+        "name": "_price",
         "type": "uint256"
       }
     ],
@@ -485,6 +544,24 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "removeAccessControl",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

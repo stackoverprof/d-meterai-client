@@ -10,11 +10,12 @@ const Downloader = () => {
 	const DigitalMeterai = useDigitalMeterai();
 
 	const router = useRouter();
-	const { tokenId } = router.query;
+	const { tokenId: _tokenId } = router.query;
 
 	const handleDownload = async () => {
-		if (typeof tokenId !== 'string') return;
-		const tokenData = await DigitalMeterai.getToken(0);
+		if (typeof _tokenId !== 'string') return;
+		const tokenId = parseInt(_tokenId);
+		const tokenData = await DigitalMeterai.getToken(tokenId);
 		const rootCID = tokenData.document;
 
 		const res = await IPFS.get(rootCID); // Promise<Web3Response | null>
@@ -24,7 +25,12 @@ const Downloader = () => {
 		const CID = files[0].cid;
 		const downloadLink = `https://${CID}.ipfs.w3s.link`;
 		const encryptedBase64 = await axios.get(downloadLink).then((res) => res.data);
-		const decryptedBase64 = CryptoJS.AES.decrypt(encryptedBase64, 'password').toString(
+
+		const password = await DigitalMeterai.getPassword(tokenId).catch((err) => {
+			console.log('err', err);
+		});
+		console.log('password', password);
+		const decryptedBase64 = CryptoJS.AES.decrypt(encryptedBase64, password).toString(
 			CryptoJS.enc.Utf8
 		);
 		const response = await fetch(decryptedBase64);
