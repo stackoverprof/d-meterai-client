@@ -4,6 +4,7 @@ import useContractOwnerOnly from '@core/hooks/useContractOwnerOnly';
 import AdminLayout from '@components/_layouts/AdminLayout';
 import MintFeature from '@components/Admin/MintFeature';
 import useTokenSupply from '@core/hooks/useTokenSupply';
+import OwnershipManagement from '@components/Admin/OwnershipManagement';
 
 const Admin: NextPage = () => {
 	useContractOwnerOnly();
@@ -16,6 +17,7 @@ const Admin: NextPage = () => {
 				<p className="text-xl">Stok d-Meterai tersedia: {available}</p>
 			</div>
 			<MintFeature />
+			<OwnershipManagement />
 		</AdminLayout>
 	);
 };

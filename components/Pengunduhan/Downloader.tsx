@@ -60,11 +60,11 @@ const Downloader = () => {
 				disabled={!isListed || status !== 'initial'}
 			>
 				{{
-					initial: 'Unduh dari IPFS',
+					initial: 'Unduh dokumen',
 					cid: 'Mendapatkan root CID...',
 					filecid: 'Mendapatkan file CID...',
-					fetching: 'Mengambil dokumen...',
-					password: 'Mengakses password...',
+					fetching: 'Terhubung ke IPFS...',
+					password: 'Mengontrol akses...',
 					decrypting: 'Dekripsi dokumen...',
 					downloading: 'Menyimpan ke perangkat...',
 				}[status] || ''}

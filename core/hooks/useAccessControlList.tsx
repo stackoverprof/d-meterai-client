@@ -27,7 +27,6 @@ const useAccessControlList = (tokenId: number) => {
 
 	useEffect(() => {
 		if (DigitalMeterai) {
-			// listen to mint event on DigitalMeterai
 			DigitalMeterai.on('DMT___AccessControlChanged', update);
 		}
 		return () => {

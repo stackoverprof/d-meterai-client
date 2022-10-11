@@ -22,7 +22,6 @@ const useMyTokens = () => {
 
 	useEffect(() => {
 		if (DigitalMeterai) {
-			// listen to mint event on DigitalMeterai
 			DigitalMeterai.on('DMT___Bought', update);
 			DigitalMeterai.on('DMT___Bound', update);
 		}

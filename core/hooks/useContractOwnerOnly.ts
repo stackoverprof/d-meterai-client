@@ -1,22 +1,20 @@
 import compareAddresses from '@core/utils/compareAddresses';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import useDigitalMeterai from './useDigitalMeterai';
+import useOwner from './useOwner';
 import useWallet from './useWallet';
 
 const useContractOwnerOnly = () => {
-	const DigitalMeterai = useDigitalMeterai();
+	const { owner } = useOwner();
 	const { account } = useWallet();
 	const router = useRouter();
 
 	useEffect(() => {
 		(async () => {
-			if (!DigitalMeterai || !account) return;
-
-			const owner = await DigitalMeterai.owner();
+			if (!owner || !account) return;
 			if (!compareAddresses(account, owner)) router.push('/');
 		})();
-	}, [account, DigitalMeterai]);
+	}, [account, owner]);
 };
 
 export default useContractOwnerOnly;
