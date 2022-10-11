@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import CryptoJS from 'crypto-js';
-import useIPFS from '@core/hooks/useIPFS';
 import useDigitalMeterai from '@core/hooks/useDigitalMeterai';
 import { useRouter } from 'next/router';
 import axios from 'axios';
@@ -17,7 +16,6 @@ type EnumStatus =
 
 const Downloader = () => {
 	const [status, setStatus] = useState<EnumStatus>('initial');
-	const IPFS = useIPFS();
 	const DigitalMeterai = useDigitalMeterai();
 
 	const router = useRouter();
@@ -31,30 +29,10 @@ const Downloader = () => {
 		const tokenId = parseInt(_tokenId);
 		const tokenData = await DigitalMeterai.getToken(tokenId);
 		const rootCID = tokenData.document;
-		console.log('rootCID', `https://${rootCID}.ipfs.w3s.link`);
-
-		const info = await IPFS.status(rootCID);
-		console.log('info', info);
-		setStatus('filecid');
-		const res = await IPFS.get(rootCID).catch((err) => {
-			console.error('err getting file CID', err);
-			setStatus('initial');
-		});
-		console.log('res', res);
-		if (!res) return;
-		const files = await res.files().catch((err) => {
-			console.log('err getting file');
-			console.log(err);
-
-			setStatus('initial');
-		});
-		console.log('files', files);
-		if (!files || files.length === 0) return;
-		const CID = files[0].cid;
-		console.log('fileCID', `https://${CID}.ipfs.w3s.link`);
+		console.log('rootCID', `https://${rootCID}.ipfs.w3s.link/document`);
 
 		setStatus('fetching');
-		const downloadLink = `https://${CID}.ipfs.w3s.link`;
+		const downloadLink = `https://${rootCID}.ipfs.w3s.link/document`;
 		const encryptedBase64 = await axios.get(downloadLink).then((res) => res.data);
 		setStatus('password');
 
@@ -73,7 +51,7 @@ const Downloader = () => {
 
 		const blobURL = URL.createObjectURL(asBlob);
 		const a = document.createElement('a');
-		a.setAttribute('download', `d-Meterai-document-${tokenId}.pdf`);
+		a.setAttribute('download', `d-Meterai-document-${tokenId}-${new Date().toISOString()}.pdf`);
 		a.setAttribute('href', blobURL);
 		document.body.appendChild(a);
 		a.click();

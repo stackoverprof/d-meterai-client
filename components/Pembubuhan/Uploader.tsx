@@ -58,7 +58,7 @@ const Uploader = () => {
 		const password = passwordGenerator();
 		const encryptedBase64 = CryptoJS.AES.encrypt(asBase64, password).toString();
 		const asTxtBlob = new Blob([encryptedBase64], { type: 'text/plain' });
-		const asTxtFile = new File([asTxtBlob], `encrypted-${tokenId}`, { type: 'text/plain' });
+		const asTxtFile = new File([asTxtBlob], 'document', { type: 'text/plain' });
 
 		const folderCID = await IPFS.put([asTxtFile]);
 
