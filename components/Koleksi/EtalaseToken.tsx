@@ -8,7 +8,7 @@ const EtalaseToken = () => {
 
 	return (
 		<div className="flex-sc col w-full">
-			<div className="flex-sc col">
+			<div className="flex-sc col mb-24">
 				<div className="container grid grid-cols-5">
 					{tokensByStatus.paid?.map((token, i) => (
 						<CardToken data={token} key={i} />
@@ -16,15 +16,16 @@ const EtalaseToken = () => {
 					<CardBuy />
 				</div>
 			</div>
-			<div className="flex-sc col">
-				<h1 className="flex-cc my-12 w-full text-xl font-bold">Sudah terpakai</h1>
-				<div className="container grid grid-cols-5">
-					{tokensByStatus.bound?.map((token, i) => (
-						<CardToken data={token} key={i} />
-					))}
-					<CardBuy />
+			{tokensByStatus.bound?.length > 0 && (
+				<div className="flex-sc col mb-24">
+					<h2 className="text-xl">Sudah terpakai</h2>
+					<div className="container grid grid-cols-5">
+						{tokensByStatus.bound?.map((token, i) => (
+							<CardToken data={token} key={i} />
+						))}
+					</div>
 				</div>
-			</div>
+			)}
 		</div>
 	);
 };

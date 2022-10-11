@@ -6,37 +6,27 @@
   },
   {
     "inputs": [],
-    "name": "DMT___CannotRemoveOwner",
+    "name": "ERROR___AccessDenied",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "DMT___ForbiddenActionsNotOwner",
+    "name": "ERROR___ForbiddenCommand",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "DMT___InvalidTransactionIncorrectValue",
+    "name": "ERROR___InvalidPayment",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "DMT___OutOfStock",
+    "name": "ERROR___InvalidStatus",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "DMT___UnmatchedStatusNotAvailable",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "DMT___UnmatchedStatusNotBound",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "DMT___UnmatchedStatusNotPaid",
+    "name": "ERROR___OutOfStock",
     "type": "error"
   },
   {
@@ -92,13 +82,7 @@
   {
     "anonymous": false,
     "inputs": [],
-    "name": "DMT___AccessControlAdded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [],
-    "name": "DMT___AccessControlRemoved",
+    "name": "DMT___AccessControlChanged",
     "type": "event"
   },
   {

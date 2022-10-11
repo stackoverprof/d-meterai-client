@@ -4,8 +4,11 @@ import ProgressBar from '@components/_shared/ProgressBar';
 import store from '@core/redux/store';
 import { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
+
 import '@core/styles/global.tailwind.css';
 import '@core/styles/typefaces.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = ({ Component, pageProps }: AppProps) => {
 	return (
@@ -19,6 +22,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 			<Provider store={store}>
 				<Component {...pageProps} />
 			</Provider>
+			<ToastContainer position="bottom-right" autoClose={5000} pauseOnHover theme="dark" />
 		</>
 	);
 };

@@ -2,6 +2,7 @@ import useDigitalMeterai from '@core/hooks/useDigitalMeterai';
 import useForm from '@core/hooks/useForm';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface FormType {
 	quantity: number;
@@ -21,8 +22,8 @@ const MintFeature = () => {
 	const handleSubmit = async () => {
 		setIsLoading(true);
 		DigitalMeterai.mint(form.quantity, ethers.utils.parseEther(form.price.toString())).catch(
-			() => {
-				alert('Proses penerbitan gagal');
+			(err) => {
+				toast.error(err.errorName);
 				setIsLoading(false);
 			}
 		);

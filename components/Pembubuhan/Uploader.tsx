@@ -124,6 +124,7 @@ const Uploader = () => {
 						initial: 'Unggah dan bubuhkan meterai',
 						uploading: 'Proses penggunggahan...',
 						binding: 'Proses pembubuhan...',
+						done: 'Pembubuhan berhasil!',
 					}[status]
 				}
 			</button>

@@ -3,14 +3,12 @@ import useAccessControlList from '@core/hooks/useAccessControlList';
 import useForm from '@core/hooks/useForm';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { RiDeleteBack2Fill } from 'react-icons/ri';
-import useOwner from '@core/hooks/useOwner';
-import useOwnerOf from '@core/hooks/useOwnerOf';
+import AddressList from './AddressList';
 
 const AccessController = () => {
 	const [isLoading, setIsLoading] = useState(false);
 
-	const { form, mutateForm } = useForm({
+	const { form, mutateForm, resetForm } = useForm({
 		address: '',
 	});
 
@@ -18,9 +16,6 @@ const AccessController = () => {
 	const { tokenId: _tokenId } = router.query;
 	const DigitalMeterai = useDigitalMeterai();
 	const { list } = useAccessControlList(parseInt(_tokenId as string));
-
-	const { isOwner } = useOwner();
-	const { isTokenOwner } = useOwnerOf(parseInt(_tokenId as string));
 
 	const handleGrantAccess = () => {
 		if (typeof _tokenId !== 'string') return;
@@ -35,12 +30,13 @@ const AccessController = () => {
 
 	const onSuccess = () => {
 		setIsLoading(false);
+		resetForm();
 	};
 
 	useEffect(() => {
 		if (DigitalMeterai) {
 			// listen to mint event on DigitalMeterai
-			DigitalMeterai.on('DMT___AccessControlAdded', onSuccess);
+			DigitalMeterai.on('DMT___AccessControlChanged', onSuccess);
 		}
 	}, [DigitalMeterai]);
 
@@ -72,14 +68,7 @@ const AccessController = () => {
 				<p className="flex-cc mb-4 w-full text-2xl font-bold">Daftar akses</p>
 				<div className="flex-sc col w-64">
 					{list.map((address, i) => (
-						<div className="flex-bc mb-4 w-full" key={i}>
-							<p className="flex-sc w-full text-xl" key={i}>
-								{address.slice(0, 10)}...{address.slice(-6)}
-							</p>
-							{!isOwner && !isTokenOwner && (
-								<RiDeleteBack2Fill size={20} className="text-red-400" />
-							)}{' '}
-						</div>
+						<AddressList address={address} key={i} />
 					))}
 				</div>
 			</div>

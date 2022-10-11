@@ -1,6 +1,7 @@
 import useDigitalMeterai from '@core/hooks/useDigitalMeterai';
 import React, { useEffect, useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
+import { toast } from 'react-toastify';
 
 const CardBuy = () => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -9,12 +10,16 @@ const CardBuy = () => {
 
 	const handleBuy = async () => {
 		setIsLoading(true);
-		const targetToken = await DigitalMeterai.getAvailableToken();
+		const targetToken = await DigitalMeterai.getAvailableToken().catch((err) => {
+			toast.error(err.errorName);
+			setIsLoading(false);
+		});
+		if (!targetToken) return;
 		const price = targetToken.price;
 		DigitalMeterai.buy(targetToken.tokenId, {
 			value: price,
 		}).catch((err) => {
-			console.error('Failed to purchase', err);
+			toast.error(err.errorName);
 			setIsLoading(false);
 		});
 	};

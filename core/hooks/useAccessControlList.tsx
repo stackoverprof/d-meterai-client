@@ -8,18 +8,29 @@ const useAccessControlList = (tokenId: number) => {
 	const DigitalMeterai = useDigitalMeterai();
 	const { account } = useWallet();
 
+	const update = () => {
+		DigitalMeterai.getAccessControl(tokenId)
+			.then((res) => {
+				setList(res);
+			})
+			.catch((err) => {
+				console.error('forbidden', err);
+			});
+	};
+
 	useEffect(() => {
 		(async () => {
 			if (!DigitalMeterai || !account) return;
-			DigitalMeterai.getAccessControl(tokenId)
-				.then((res) => {
-					setList(res);
-				})
-				.catch((err) => {
-					console.error('forbidden', err);
-				});
+			update();
 		})();
 	}, [account, DigitalMeterai]);
+
+	useEffect(() => {
+		if (DigitalMeterai) {
+			// listen to mint event on DigitalMeterai
+			DigitalMeterai.on('DMT___AccessControlChanged', update);
+		}
+	}, [DigitalMeterai]);
 
 	return {
 		list,
