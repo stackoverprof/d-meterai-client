@@ -1,13 +1,13 @@
 import Logo from '@components/NavigationBar/Logo';
 import Link from '@components/_shared/Link';
-import useIsOwner from '@core/hooks/useIsOwner';
+import useOwner from '@core/hooks/useOwner';
 import React from 'react';
 import { RiShieldFlashLine } from 'react-icons/ri';
 
 import ConnectionPortal from './ConnectionPortal';
 
 const NavbarMain = () => {
-	const isOwner = useIsOwner();
+	const { isOwner } = useOwner();
 	return (
 		<div className="flex-cc w-full border-b border-theme-purple">
 			<div className="container flex-bc py-3">

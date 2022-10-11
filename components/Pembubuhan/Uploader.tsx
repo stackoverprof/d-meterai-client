@@ -85,7 +85,7 @@ const Uploader = () => {
 
 	const onSuccess = () => {
 		setStatus('done');
-		router.push(`/pengunduhan?tokenId=${0}`);
+		router.push(`/pengunduhan?tokenId=${tokenId}`);
 	};
 
 	useEffect(() => {
@@ -105,6 +105,7 @@ const Uploader = () => {
 					id="file"
 					className="opacity-0"
 					onChange={handleFileChange}
+					disabled={status !== 'initial'}
 				/>
 				<label
 					htmlFor="file"

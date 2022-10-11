@@ -6,6 +6,11 @@
   },
   {
     "inputs": [],
+    "name": "DMT___CannotRemoveOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "DMT___ForbiddenActionsNotOwner",
     "type": "error"
   },
@@ -261,6 +266,25 @@
     "name": "buy",
     "outputs": [],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getAccessControl",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

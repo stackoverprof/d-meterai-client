@@ -35,7 +35,7 @@ const CardBuy = () => {
 		<button
 			onClick={handleBuy}
 			disabled={isLoading}
-			className="flex-cc col m-4 w-56 h-80 rounded border-2 border-theme-purple"
+			className="flex-cc col m-4 w-56 h-96 rounded border-2 border-theme-purple"
 		>
 			{isLoading ? (
 				<>

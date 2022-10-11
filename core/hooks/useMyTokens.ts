@@ -12,7 +12,6 @@ const useMyTokens = () => {
 
 	const update = () => {
 		DigitalMeterai.getMyTokens().then((res) => {
-			console.log('res', res);
 			setMyTokens(res.map((token) => converterTokenData.toJSON(token)));
 		});
 	};
@@ -35,6 +34,11 @@ const useMyTokens = () => {
 
 	return {
 		tokens: myTokens,
+		tokensByStatus: {
+			available: myTokens?.filter((token) => token.status === 0),
+			paid: myTokens?.filter((token) => token.status === 1),
+			bound: myTokens?.filter((token) => token.status === 2),
+		},
 	};
 };
 

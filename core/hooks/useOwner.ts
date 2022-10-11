@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import useDigitalMeterai from './useDigitalMeterai';
 import useWallet from './useWallet';
 
-const useIsOwner = () => {
-	const [isOwner, setIsOwner] = useState(false);
+const useOwner = () => {
+	const [owner, setOwner] = useState('');
 
 	const DigitalMeterai = useDigitalMeterai();
 	const { account } = useWallet();
@@ -14,13 +14,12 @@ const useIsOwner = () => {
 			if (!DigitalMeterai || !account) return;
 			const owner = await DigitalMeterai.owner();
 
-			if (compareAddresses(account, owner)) setIsOwner(true);
-			else setIsOwner(false);
+			setOwner(owner);
 		})();
 	}, [account, DigitalMeterai]);
 
-	return isOwner;
+	return { owner, isOwner: compareAddresses(account, owner) };
 };
 
-export default useIsOwner;
+export default useOwner;
 
