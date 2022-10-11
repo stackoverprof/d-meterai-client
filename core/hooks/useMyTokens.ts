@@ -26,6 +26,12 @@ const useMyTokens = () => {
 			DigitalMeterai.on('DMT___Bought', update);
 			DigitalMeterai.on('DMT___Bound', update);
 		}
+		return () => {
+			if (DigitalMeterai) {
+				DigitalMeterai.off('DMT___Bought', update);
+				DigitalMeterai.off('DMT___Bound', update);
+			}
+		};
 	}, [DigitalMeterai]);
 
 	useEffect(() => {

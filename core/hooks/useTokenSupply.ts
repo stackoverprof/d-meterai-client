@@ -40,6 +40,9 @@ const useTokenSupply = () => {
 			// listen to mint event on DigitalMeterai
 			DigitalMeterai.on('DMT___Minted', updateTotalSupply);
 		}
+		return () => {
+			if (DigitalMeterai) DigitalMeterai.off('DMT___Minted', updateTotalSupply);
+		};
 	}, [DigitalMeterai]);
 
 	return {

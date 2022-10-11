@@ -30,10 +30,16 @@ const CardBuy = () => {
 
 	useEffect(() => {
 		if (DigitalMeterai) {
-			// listen to mint event on DigitalMeterai
 			DigitalMeterai.on('DMT___Bought', onSuccess);
 			DigitalMeterai.on('DMT___Bound', onSuccess);
 		}
+
+		return () => {
+			if (DigitalMeterai) {
+				DigitalMeterai.off('DMT___Bought', onSuccess);
+				DigitalMeterai.off('DMT___Bound', onSuccess);
+			}
+		};
 	}, [DigitalMeterai]);
 
 	return (

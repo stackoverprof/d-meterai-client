@@ -83,16 +83,19 @@ const Uploader = () => {
 		});
 	};
 
-	const onSuccess = () => {
+	const onSuccess = (res) => {
+		const received = res.toString();
+		if (received !== tokenId) return;
 		setStatus('done');
-		router.push(`/pengunduhan?tokenId=${tokenId}`);
+		router.push(`/pengunduhan?tokenId=${received}`);
 	};
 
 	useEffect(() => {
-		if (DigitalMeterai) {
-			// listen to mint event on DigitalMeterai
-			DigitalMeterai.on('DMT___Bound', onSuccess);
-		}
+		if (DigitalMeterai) DigitalMeterai.on('DMT___Bound', onSuccess);
+
+		return () => {
+			if (DigitalMeterai) DigitalMeterai.off('DMT___Bound', onSuccess);
+		};
 	}, [DigitalMeterai]);
 
 	return (

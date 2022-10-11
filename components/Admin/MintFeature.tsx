@@ -29,14 +29,19 @@ const MintFeature = () => {
 		);
 	};
 
+	const onSuccess = () => {
+		setIsLoading(false);
+		resetForm();
+	};
+
 	useEffect(() => {
 		if (DigitalMeterai) {
-			// listen to mint event on DigitalMeterai
-			DigitalMeterai.on('DMT___Minted', () => {
-				setIsLoading(false);
-				resetForm();
-			});
+			DigitalMeterai.on('DMT___Minted', onSuccess);
 		}
+
+		return () => {
+			if (DigitalMeterai) DigitalMeterai.off('DMT___Minted', onSuccess);
+		};
 	}, [DigitalMeterai]);
 
 	return (

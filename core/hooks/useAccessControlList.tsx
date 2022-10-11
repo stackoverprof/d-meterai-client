@@ -30,6 +30,9 @@ const useAccessControlList = (tokenId: number) => {
 			// listen to mint event on DigitalMeterai
 			DigitalMeterai.on('DMT___AccessControlChanged', update);
 		}
+		return () => {
+			if (DigitalMeterai) DigitalMeterai.off('DMT___AccessControlChanged', update);
+		};
 	}, [DigitalMeterai]);
 
 	return {

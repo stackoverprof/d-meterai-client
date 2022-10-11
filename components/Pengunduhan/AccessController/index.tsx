@@ -38,6 +38,9 @@ const AccessController = () => {
 			// listen to mint event on DigitalMeterai
 			DigitalMeterai.on('DMT___AccessControlChanged', onSuccess);
 		}
+		return () => {
+			if (DigitalMeterai) DigitalMeterai.off('DMT___AccessControlChanged', onSuccess);
+		};
 	}, [DigitalMeterai]);
 
 	return (
