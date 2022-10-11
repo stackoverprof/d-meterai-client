@@ -17,7 +17,7 @@ const Uploader = () => {
 	const { tokenId } = router.query;
 
 	const generateQR = () => {
-		const verificationURL = `${window.location.origin}/verify?tokenId=${tokenId}`;
+		const verificationURL = `${window.location.origin}/pengunduhan?tokenId=${tokenId}`;
 		const buffer = qr.imageSync(verificationURL, { type: 'pdf' });
 		const blob = new Blob([buffer], { type: 'application/pdf' });
 		const blobFile = new File([blob], 'qr-stamp.pdf', { type: 'application/pdf' });

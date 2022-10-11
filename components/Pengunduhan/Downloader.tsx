@@ -5,14 +5,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import useAccessControlList from '@core/hooks/useAccessControlList';
 
-type EnumStatus =
-	| 'initial'
-	| 'rootcid'
-	| 'filecid'
-	| 'fetching'
-	| 'password'
-	| 'decrypting'
-	| 'downloading';
+type EnumStatus = 'initial' | 'cid' | 'fetching' | 'password' | 'decrypting' | 'downloading';
 
 const Downloader = () => {
 	const [status, setStatus] = useState<EnumStatus>('initial');
@@ -25,17 +18,16 @@ const Downloader = () => {
 
 	const handleDownload = async () => {
 		if (typeof _tokenId !== 'string') return;
-		setStatus('rootcid');
+		setStatus('cid');
 		const tokenId = parseInt(_tokenId);
 		const tokenData = await DigitalMeterai.getToken(tokenId);
 		const rootCID = tokenData.document;
-		console.log('rootCID', `https://${rootCID}.ipfs.w3s.link/document`);
 
 		setStatus('fetching');
 		const downloadLink = `https://${rootCID}.ipfs.w3s.link/document`;
 		const encryptedBase64 = await axios.get(downloadLink).then((res) => res.data);
-		setStatus('password');
 
+		setStatus('password');
 		const password = await DigitalMeterai.getPassword(tokenId).catch((err) => {
 			console.log('err', err);
 		});
@@ -69,7 +61,7 @@ const Downloader = () => {
 			>
 				{{
 					initial: 'Unduh dari IPFS',
-					rootcid: 'Mendapatkan root CID...',
+					cid: 'Mendapatkan root CID...',
 					filecid: 'Mendapatkan file CID...',
 					fetching: 'Mengambil dokumen...',
 					password: 'Mengakses password...',
