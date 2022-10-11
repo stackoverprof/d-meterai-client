@@ -21,5 +21,3 @@ const Admin: NextPage = () => {
 };
 
 export default Admin;
-
-// [TODO] : Transfer contract ownership
