@@ -20,8 +20,8 @@ const Uploader = () => {
 		const verificationURL = `${window.location.origin}/pengunduhan?tokenId=${tokenId}`;
 		const buffer = qr.imageSync(verificationURL, { type: 'pdf' });
 		const blob = new Blob([buffer], { type: 'application/pdf' });
-		const blobFile = new File([blob], 'qr-stamp.pdf', { type: 'application/pdf' });
-		return blobFile;
+		const file = new File([blob], 'qr-stamp.pdf', { type: 'application/pdf' });
+		return file;
 	};
 
 	const attachToken = async (document: File) => {

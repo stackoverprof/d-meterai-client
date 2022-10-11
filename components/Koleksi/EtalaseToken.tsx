@@ -18,7 +18,11 @@ const EtalaseToken = () => {
 			</div>
 			{tokensByStatus.bound?.length > 0 && (
 				<div className="flex-sc col mb-24">
-					<h2 className="text-xl">Sudah terpakai</h2>
+					<div className="container flex-sc">
+						<h2 className="relative top-1 px-4 mb-3 text-2xl bg-base">
+							d-Meterai terpakai
+						</h2>
+					</div>
 					<div className="container grid grid-cols-5">
 						{tokensByStatus.bound?.map((token, i) => (
 							<CardToken data={token} key={i} />
