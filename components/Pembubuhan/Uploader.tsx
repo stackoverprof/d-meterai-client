@@ -85,9 +85,9 @@ const Uploader = () => {
 			page.doc.context.obj({
 				Type: 'Annot',
 				Subtype: 'Link',
-				Rect: [0, 30, 40, 230],
-				Border: [0, 0, 2],
-				C: [0, 0, 1],
+				Rect: [0, 0, 0, 0],
+				Border: [0, 0, 0],
+				C: [0, 0, 0],
 				A: {
 					Type: 'Action',
 					S: 'URI',
