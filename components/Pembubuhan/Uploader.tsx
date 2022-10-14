@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import qr from 'qr-image';
-import PDFMerger from 'pdf-merger-js/browser';
 import { useRouter } from 'next/router';
 import CryptoJS from 'crypto-js';
 import useDigitalMeterai from '@core/hooks/useDigitalMeterai';
 import useIPFS from '@core/hooks/useIPFS';
+import { PDFDocument, PDFName, PDFPage, PDFString, rgb, StandardFonts } from 'pdf-lib';
 import { passwordGenerator } from '@core/utils/passwordGenerator';
 
 type EnumStatus = 'initial' | 'uploading' | 'binding' | 'done' | 'failed';
@@ -24,16 +24,87 @@ const Uploader = () => {
 		return file;
 	};
 
-	const attachToken = async (document: File) => {
-		const qrStamp = generateQR();
-		const merger = new PDFMerger();
-		await merger.add(qrStamp);
-		await merger.add(document);
-		const asBlob = await merger.saveAsBlob();
-		const asFile = new File([asBlob], `${tokenId}-${document.name}.pdf`, {
-			type: 'application/pdf',
+	const digitalSign = async (document: File): Promise<File> => {
+		const asBuffer = await fileToArrayBuffer(document);
+
+		const pdfDoc = await PDFDocument.load(asBuffer);
+		const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+		const pages = pdfDoc.getPages();
+		const mainPage = pages[0];
+		const { height } = mainPage.getSize();
+		const signedAt = new Date().toLocaleString('id-ID', {
+			timeZone: 'Asia/Jakarta',
 		});
+
+		mainPage.drawText(
+			`Tertanda tangan digital dengan d-Meterai#${tokenId} pada ${signedAt} — Buka tautan di bawah ini untuk melihat dokumen autentik`,
+			{
+				x: 50,
+				y: height - 12,
+				size: 8,
+				font: helveticaFont,
+				color: rgb(0.5, 0.5, 0.5),
+			}
+		);
+		mainPage.drawText(`${window.location.origin}/pengunduhan?tokenId=${tokenId}`, {
+			x: 50,
+			y: height - 20,
+			size: 8,
+			font: helveticaFont,
+			color: rgb(0.6, 0.11, 0.89),
+		});
+		const link = createPageLinkAnnotation(
+			mainPage,
+			`${window.location.origin}/pengunduhan?tokenId=${tokenId}`
+		);
+		mainPage.node.set(PDFName.of('Annots'), pdfDoc.context.obj([link]));
+
+		const qrPdf = generateQR();
+		const qrBuffer = await fileToArrayBuffer(qrPdf);
+
+		const [qrEmbed] = await pdfDoc.embedPdf(qrBuffer);
+
+		mainPage.drawPage(qrEmbed, {
+			width: 40,
+			height: 40,
+			x: 5,
+			y: height - 45,
+		});
+
+		const pdfBytes = await pdfDoc.save();
+
+		// convert back to File
+		const asBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+		const asFile = new File([asBlob], 'signed.pdf', { type: 'application/pdf' });
 		return asFile;
+	};
+
+	const createPageLinkAnnotation = (page: PDFPage, uri: string) =>
+		page.doc.context.register(
+			page.doc.context.obj({
+				Type: 'Annot',
+				Subtype: 'Link',
+				Rect: [0, 30, 40, 230],
+				Border: [0, 0, 2],
+				C: [0, 0, 1],
+				A: {
+					Type: 'Action',
+					S: 'URI',
+					URI: PDFString.of(uri),
+				},
+			})
+		);
+
+	const fileToArrayBuffer = async (file: File): Promise<string | ArrayBuffer> => {
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.onload = () => {
+				resolve(reader.result);
+			};
+			reader.onerror = reject;
+			reader.readAsArrayBuffer(file);
+		});
 	};
 
 	const fileToBase64 = async (file: File) => {
@@ -50,9 +121,9 @@ const Uploader = () => {
 	const handleUpload = async () => {
 		if (!file || !file.length) return;
 		setStatus('uploading');
-		const processedDocument = await attachToken(file[0]);
+		const processedDocument = await digitalSign(file[0]);
 
-		const asBase64 = await fileToBase64(processedDocument).then((res) => res);
+		const asBase64 = await fileToBase64(processedDocument);
 		if (typeof asBase64 !== 'string') return;
 
 		const password = passwordGenerator();

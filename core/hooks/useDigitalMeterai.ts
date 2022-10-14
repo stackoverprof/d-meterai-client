@@ -6,6 +6,7 @@ const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 
 const useDigitalMeterai = () => {
 	const [contract, setContract] = useState<Contract | null>(null);
+
 	useEffect(() => {
 		if (typeof window !== 'undefined') {
 			const provider = new ethers.providers.Web3Provider(window.ethereum);

@@ -4,6 +4,7 @@ import useDigitalMeterai from '@core/hooks/useDigitalMeterai';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import useAccessControlList from '@core/hooks/useAccessControlList';
+import { toast } from 'react-toastify';
 
 type EnumStatus = 'initial' | 'cid' | 'fetching' | 'password' | 'decrypting' | 'downloading';
 
@@ -25,7 +26,14 @@ const Downloader = () => {
 
 		setStatus('fetching');
 		const downloadLink = `https://${rootCID}.ipfs.w3s.link/document`;
-		const encryptedBase64 = await axios.get(downloadLink).then((res) => res.data);
+		const encryptedBase64 = await axios
+			.get(downloadLink)
+			.then((res) => res.data)
+			.catch((err) => {
+				console.error(err);
+				toast.error('Gagal mengunduh dokumen');
+				setStatus('initial');
+			});
 
 		setStatus('password');
 		const password = await DigitalMeterai.getPassword(tokenId).catch((err) => {
@@ -63,7 +71,7 @@ const Downloader = () => {
 					initial: 'Unduh dokumen',
 					cid: 'Mendapatkan root CID...',
 					filecid: 'Mendapatkan file CID...',
-					fetching: 'Terhubung ke IPFS...',
+					fetching: 'Mendapatkan dokumen...',
 					password: 'Mengontrol akses...',
 					decrypting: 'Dekripsi dokumen...',
 					downloading: 'Menyimpan ke perangkat...',
