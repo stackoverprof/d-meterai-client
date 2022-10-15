@@ -12,21 +12,18 @@ interface FormType {
 const MintFeature = () => {
 	const [isLoading, setIsLoading] = useState(false);
 
+	// Form that contains input for quantity and price
 	const { form, mutateForm, resetForm } = useForm<FormType>({
 		quantity: 1,
 		price: 0.0005,
 	});
 
+	// Instance of DigitalMeterai
 	const DigitalMeterai = useDigitalMeterai();
 
+	// Calls blockchain for mint operation
 	const handleSubmit = async () => {
-		setIsLoading(true);
-		DigitalMeterai.mint(form.quantity, ethers.utils.parseEther(form.price.toString())).catch(
-			(err) => {
-				toast.error(err.errorName);
-				setIsLoading(false);
-			}
-		);
+		DigitalMeterai.mint(form.quantity, ethers.utils.parseEther(form.price.toString()));
 	};
 
 	const onSuccess = () => {
