@@ -43,8 +43,9 @@ const Downloader = () => {
 
 		// Downloading the file
 		const blobURL = URL.createObjectURL(asBlob);
+		const date = new Date().toISOString();
 		const a = document.createElement('a');
-		a.setAttribute('download', `d-Meterai-document-${tokenId}-${new Date().toISOString()}.pdf`);
+		a.setAttribute('download', `d-Meterai-document-${tokenId}-${date}.pdf`);
 		a.setAttribute('href', blobURL);
 		document.body.appendChild(a);
 		a.click();
