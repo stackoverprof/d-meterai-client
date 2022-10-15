@@ -23,7 +23,10 @@ const MintFeature = () => {
 
 	// Calls blockchain for mint operation
 	const handleSubmit = async () => {
-		DigitalMeterai.mint(form.quantity, ethers.utils.parseEther(form.price.toString()));
+		const quantity = form.quantity;
+		const price = ethers.utils.parseEther(form.price.toString());
+
+		DigitalMeterai.mint(quantity, price);
 	};
 
 	const onSuccess = () => {
