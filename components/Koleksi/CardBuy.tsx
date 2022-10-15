@@ -9,18 +9,15 @@ const CardBuy = () => {
 	const DigitalMeterai = useDigitalMeterai();
 
 	const handleBuy = async () => {
-		setIsLoading(true);
-		const targetToken = await DigitalMeterai.getAvailableToken().catch((err) => {
-			toast.error(err.errorName);
-			setIsLoading(false);
-		});
-		if (!targetToken) return;
+		// Asking for one available token to buy
+		const targetToken = await DigitalMeterai.getAvailableToken();
+
+		// Getting the price info of that token
 		const price = targetToken.price;
+
+		// Calling blockchain for buy operation
 		DigitalMeterai.buy(targetToken.tokenId, {
 			value: price,
-		}).catch((err) => {
-			toast.error(err.errorName);
-			setIsLoading(false);
 		});
 	};
 
