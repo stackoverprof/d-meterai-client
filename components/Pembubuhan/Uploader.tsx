@@ -14,10 +14,13 @@ const Uploader = () => {
 	const [file, setFile] = useState<any[]>(null);
 
 	const router = useRouter();
+
 	const { tokenId } = router.query;
 
+	const verificationURL = `${window.location.origin}/pengunduhan?tokenId=${tokenId}`;
+
 	const generateQR = () => {
-		const verificationURL = `${window.location.origin}/pengunduhan?tokenId=${tokenId}`;
+		// Generate QR Code for the verification link
 		const buffer = qr.imageSync(verificationURL, { type: 'pdf' });
 		const blob = new Blob([buffer], { type: 'application/pdf' });
 		const file = new File([blob], 'qr-stamp.pdf', { type: 'application/pdf' });
@@ -25,18 +28,24 @@ const Uploader = () => {
 	};
 
 	const digitalSign = async (document: File): Promise<File> => {
+		// Convert file to buffer format
 		const asBuffer = await fileToArrayBuffer(document);
 
+		// Using pdf-lib to process the file
 		const pdfDoc = await PDFDocument.load(asBuffer);
-		const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
 		const pages = pdfDoc.getPages();
+
+		// Selecting the first page
 		const mainPage = pages[0];
+
+		// Supporting variables
 		const { height } = mainPage.getSize();
+		const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
 		const signedAt = new Date().toLocaleString('id-ID', {
 			timeZone: 'Asia/Jakarta',
 		});
 
+		// Writing the texts
 		mainPage.drawText(
 			`Tertanda tangan digital dengan d-Meterai#${tokenId} pada ${signedAt} — Buka tautan di bawah ini untuk melihat dokumen autentik`,
 			{
@@ -47,24 +56,26 @@ const Uploader = () => {
 				color: rgb(0.5, 0.5, 0.5),
 			}
 		);
-		mainPage.drawText(`${window.location.origin}/pengunduhan?tokenId=${tokenId}`, {
+
+		// Writing the verification link
+		mainPage.drawText(verificationURL, {
 			x: 50,
 			y: height - 20,
 			size: 8,
 			font: helveticaFont,
 			color: rgb(0.6, 0.11, 0.89),
 		});
-		const link = createPageLinkAnnotation(
-			mainPage,
-			`${window.location.origin}/pengunduhan?tokenId=${tokenId}`
-		);
+
+		// Set as hyperlink
+		const link = createPageLinkAnnotation(mainPage, verificationURL);
 		mainPage.node.set(PDFName.of('Annots'), pdfDoc.context.obj([link]));
 
+		// Generate QR Code
 		const qrPdf = generateQR();
 		const qrBuffer = await fileToArrayBuffer(qrPdf);
-
 		const [qrEmbed] = await pdfDoc.embedPdf(qrBuffer);
 
+		// Embed the QR Code to page
 		mainPage.drawPage(qrEmbed, {
 			width: 40,
 			height: 40,
@@ -72,9 +83,10 @@ const Uploader = () => {
 			y: height - 45,
 		});
 
+		// Save the changes
 		const pdfBytes = await pdfDoc.save();
 
-		// convert back to File
+		// Convert back to File
 		const asBlob = new Blob([pdfBytes], { type: 'application/pdf' });
 		const asFile = new File([asBlob], 'signed.pdf', { type: 'application/pdf' });
 		return asFile;

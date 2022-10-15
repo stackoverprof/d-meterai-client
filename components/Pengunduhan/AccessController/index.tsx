@@ -19,13 +19,9 @@ const AccessController = () => {
 
 	const handleGrantAccess = () => {
 		if (typeof _tokenId !== 'string') return;
-		setIsLoading(true);
 
 		const tokenId = parseInt(_tokenId);
-		DigitalMeterai.addAccessControl(tokenId, form.address).catch((err) => {
-			console.error('Gagal memberikan akses', err);
-			setIsLoading(false);
-		});
+		DigitalMeterai.addAccessControl(tokenId, form.address);
 	};
 
 	const onSuccess = () => {
