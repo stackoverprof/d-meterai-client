@@ -13,42 +13,35 @@ const Downloader = () => {
 	const DigitalMeterai = useDigitalMeterai();
 
 	const router = useRouter();
-	const { tokenId: _tokenId } = router.query;
-
 	const { isListed } = useAccessControlList(parseInt(_tokenId as string));
+
+	const { tokenId: _tokenId } = router.query;
 
 	const handleDownload = async () => {
 		if (typeof _tokenId !== 'string') return;
-		setStatus('cid');
+
+		// Getting the CID from the token metadata
 		const tokenId = parseInt(_tokenId);
 		const tokenData = await DigitalMeterai.getToken(tokenId);
 		const rootCID = tokenData.document;
 
-		setStatus('fetching');
+		// Generating url and fetching the file
 		const downloadLink = `https://${rootCID}.ipfs.w3s.link/document`;
-		const encryptedBase64 = await axios
-			.get(downloadLink)
-			.then((res) => res.data)
-			.catch((err) => {
-				console.error(err);
-				toast.error('Gagal mengunduh dokumen');
-				setStatus('initial');
-			});
+		const encryptedBase64 = await axios.get(downloadLink).then((res) => res.data);
 
-		setStatus('password');
-		const password = await DigitalMeterai.getPassword(tokenId).catch((err) => {
-			console.log('err', err);
-		});
+		// Getting the password from the token metadata
+		const password = await DigitalMeterai.getPassword(tokenId);
 
-		setStatus('decrypting');
+		// Decrypting the file with the password
 		const decryptedBase64 = CryptoJS.AES.decrypt(encryptedBase64, password).toString(
 			CryptoJS.enc.Utf8
 		);
 
-		setStatus('downloading');
+		// Converting the file format back
 		const response = await fetch(decryptedBase64);
 		const asBlob = await response.blob();
 
+		// Downloading the file
 		const blobURL = URL.createObjectURL(asBlob);
 		const a = document.createElement('a');
 		a.setAttribute('download', `d-Meterai-document-${tokenId}-${new Date().toISOString()}.pdf`);
@@ -56,8 +49,6 @@ const Downloader = () => {
 		document.body.appendChild(a);
 		a.click();
 		document.body.removeChild(a);
-
-		setStatus('initial');
 	};
 
 	return (
