@@ -120,22 +120,27 @@ const Uploader = () => {
 
 	const handleUpload = async () => {
 		if (!file || !file.length) return;
-		setStatus('uploading');
+
+		// Processing document for QR stamping and url linking
 		const processedDocument = await digitalSign(file[0]);
 
+		// Encrypting document before uploading to IPFS
 		const asBase64 = await fileToBase64(processedDocument);
-		if (typeof asBase64 !== 'string') return;
-
 		const password = passwordGenerator();
 		const encryptedBase64 = CryptoJS.AES.encrypt(asBase64, password).toString();
 		const asTxtBlob = new Blob([encryptedBase64], { type: 'text/plain' });
 		const asTxtFile = new File([asTxtBlob], 'document', { type: 'text/plain' });
 
+		// Uploading to IPFS
 		const folderCID = await IPFS.put([asTxtFile]);
 
-		await IPFS.status(folderCID);
-
+		// Continue to binding operation
 		handleTokenBinding(folderCID, password);
+	};
+
+	const handleTokenBinding = async (folderCID: string, password: string) => {
+		// Updating token metadata with the given CID
+		DigitalMeterai.bind(tokenId, folderCID, password);
 	};
 
 	const handleFileChange = (e: any) => {
@@ -145,14 +150,6 @@ const Uploader = () => {
 	};
 
 	const DigitalMeterai = useDigitalMeterai();
-
-	const handleTokenBinding = async (folderCID: string, password: string) => {
-		setStatus('binding');
-		DigitalMeterai.bind(tokenId, folderCID, password).catch((err) => {
-			console.error('Failed to bind', err);
-			setStatus('failed');
-		});
-	};
 
 	const onSuccess = (res) => {
 		const received = res.toString();
