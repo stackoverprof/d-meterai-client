@@ -14,7 +14,7 @@ const MintFeature = () => {
 
 	const { form, mutateForm, resetForm } = useForm<FormType>({
 		quantity: 1,
-		price: 0.0005,
+		price: 10000,
 	});
 
 	const DigitalMeterai = useDigitalMeterai();
@@ -45,29 +45,41 @@ const MintFeature = () => {
 	}, [DigitalMeterai]);
 
 	return (
-		<div className="flex-cc gap-4">
+		<div className="w-[1070px] flex-bc mt-20">
 			<p className="text-2xl">Penerbitan d-Meterai</p>
-			<input
-				type="text"
-				name="quantity"
-				value={form.quantity}
-				onChange={mutateForm}
-				className="px-2 py-1 h-12 text-xl rounded border bg-base border-theme-purple"
-			/>
-			<input
-				type="text"
-				name="price"
-				value={form.price}
-				onChange={mutateForm}
-				className="px-2 py-1 h-12 text-xl rounded border bg-base border-theme-purple"
-			/>
-			<button
-				disabled={isLoading}
-				onClick={handleSubmit}
-				className="px-4 h-12 text-2xl rounded bg-theme-purple disabled:bg-opacity-50"
-			>
-				{isLoading ? 'Menerbitkan...' : 'Terbitkan'}
-			</button>
+			<div className="flex-cc gap-4">
+				<div className="flex-cs col pb-6">
+					<label htmlFor="quantity" className="capitalize">
+						jumlah
+					</label>
+					<input
+						type="text"
+						name="quantity"
+						value={form.quantity}
+						onChange={mutateForm}
+						className="px-2 py-1 h-12 text-xl rounded border bg-base border-theme-purple"
+					/>
+				</div>
+				<div className="flex-cs col pb-6">
+					<label htmlFor="price" className="capitalize">
+						harga
+					</label>
+					<input
+						type="text"
+						name="price"
+						value={form.price}
+						onChange={mutateForm}
+						className="px-2 py-1 h-12 text-xl rounded border bg-base border-theme-purple"
+					/>
+				</div>
+				<button
+					disabled={isLoading}
+					onClick={handleSubmit}
+					className="px-4 h-12 text-2xl rounded bg-theme-purple disabled:bg-opacity-50"
+				>
+					{isLoading ? 'Menerbitkan...' : 'Terbitkan'}
+				</button>
+			</div>
 		</div>
 	);
 };

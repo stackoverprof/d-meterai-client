@@ -39,6 +39,12 @@ const AddressList = ({ address }) => {
 					onClick={handleRemoveAccess}
 				/>
 			)}
+			{!isRemovable && compareAddresses(owner, address) && (
+				<p className="ml-4">(Pemerintah)</p>
+			)}
+			{!isRemovable && compareAddresses(tokenOwner, address) && (
+				<p className="ml-4">(Pemilik)</p>
+			)}
 		</div>
 	);
 };

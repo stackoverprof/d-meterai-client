@@ -26,6 +26,7 @@ const Downloader = () => {
 
 		setStatus('fetching');
 		const downloadLink = `https://${rootCID}.ipfs.w3s.link/document`;
+		console.log('downloadLink', downloadLink);
 		const encryptedBase64 = await axios
 			.get(downloadLink)
 			.then((res) => res.data)
@@ -77,7 +78,7 @@ const Downloader = () => {
 					downloading: 'Menyimpan ke perangkat...',
 				}[status] || ''}
 			</button>
-			{!isListed && <p className="mt-4 text-sm text-red-400">Anda tidak memiliki akses</p>}
+			{!isListed && <p className="mt-4 text-lg text-red-400">Anda tidak memiliki akses</p>}
 		</div>
 	);
 };
