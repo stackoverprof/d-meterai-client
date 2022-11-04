@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import useWeb3 from './useWeb3';
 
@@ -8,12 +9,14 @@ const useWallet = () => {
 	// is connected wallet
 	const [isConnected, setIsConnected] = useState<boolean>(false);
 	// connected accounts
-	const [account, setaccount] = useState<string | null>(null);
+	const [account, setAccount] = useState<string | null>(null);
 	// balance
 	const [balance, setBalance] = useState<string | number>(0);
 
 	// is connect process still running
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+
+	const router = useRouter();
 
 	// check wallet is installed
 	const checkIfWalletIsInstalled = async () => {
@@ -32,11 +35,12 @@ const useWallet = () => {
 		}
 		window.ethereum.on('accountsChanged', function (accounts) {
 			if (accounts && accounts.length) {
-				setaccount(accounts[0]);
+				setAccount(accounts[0]);
 				setIsConnected(true);
 			} else {
-				setaccount(null);
+				setAccount(null);
 				setIsConnected(false);
+				router.push('/');
 			}
 		});
 	};
@@ -61,12 +65,12 @@ const useWallet = () => {
 			method: 'eth_accounts',
 		});
 		if (accounts && accounts.length) {
-			setaccount(accounts[0]);
+			setAccount(accounts[0]);
 			setIsConnected(true);
 		} else {
-			setaccount(null);
+			setAccount(null);
 			setIsConnected(false);
-			console.log('No accounts found');
+			router.push('/');
 		}
 	};
 
@@ -82,7 +86,7 @@ const useWallet = () => {
 			})
 			.then((accounts) => {
 				if (accounts && accounts.length) {
-					setaccount(accounts[0]);
+					setAccount(accounts[0]);
 					setIsConnected(true);
 				}
 				setIsLoading(false);
